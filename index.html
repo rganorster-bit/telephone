@@ -3,101 +3,95 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>טלפון שבור</title>
 
 <style>
-
 body{
-    margin:0;
-    padding:20px;
-    font-family:Arial,sans-serif;
-    background:#FFD54F;
-    text-align:center;
-    color:#111;
+  margin:0;
+  padding:20px;
+  font-family:Arial,sans-serif;
+  background:#FFD54F;
+  text-align:center;
+  color:#111;
 }
 
 h1{
-    font-size:48px;
-    margin-bottom:10px;
+  font-size:44px;
 }
 
 .instructions{
-    background:white;
-    padding:20px;
-    border-radius:20px;
-    max-width:800px;
-    margin:auto;
-    line-height:1.7;
-    font-size:20px;
+  background:white;
+  padding:18px;
+  border-radius:18px;
+  font-size:19px;
+  line-height:1.6;
+  border:3px solid #111;
 }
 
 .sentence{
-    background:white;
-    padding:30px;
-    margin:25px auto;
-    border-radius:20px;
-    max-width:700px;
-    font-size:42px;
-    font-weight:bold;
-    border:4px solid #111;
+  background:white;
+  padding:24px;
+  margin:22px auto;
+  border-radius:20px;
+  max-width:700px;
+  font-size:34px;
+  font-weight:bold;
+  border:4px solid #111;
+  min-height:80px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
 .timer{
-    font-size:72px;
-    font-weight:bold;
-    margin:25px 0;
+  font-size:64px;
+  font-weight:bold;
+  margin:20px 0;
 }
 
 button{
-    font-size:24px;
-    padding:15px 30px;
-    border:none;
-    border-radius:15px;
-    cursor:pointer;
-    margin:10px;
+  font-size:22px;
+  font-weight:bold;
+  padding:14px 24px;
+  border:none;
+  border-radius:14px;
+  cursor:pointer;
+  margin:8px;
+}
+
+.newBtn{
+  background:#111;
+  color:white;
 }
 
 .startBtn{
-    background:#4CAF50;
-    color:white;
+  background:#4CAF50;
+  color:white;
 }
 
 .stopBtn{
-    background:#F44336;
-    color:white;
+  background:#F44336;
+  color:white;
+}
+
+button:disabled{
+  opacity:0.45;
+  cursor:not-allowed;
 }
 
 .result{
-    font-size:36px;
-    font-weight:bold;
-    margin-top:20px;
+  font-size:30px;
+  font-weight:bold;
+  margin-top:18px;
 }
 
 @media(max-width:600px){
-
-h1{
-    font-size:34px;
+  h1{font-size:32px;}
+  .sentence{font-size:26px;}
+  .timer{font-size:52px;}
+  .instructions{font-size:17px;}
+  button{font-size:19px;width:90%;}
 }
-
-.sentence{
-    font-size:28px;
-}
-
-.timer{
-    font-size:54px;
-}
-
-.instructions{
-    font-size:18px;
-}
-
-button{
-    font-size:20px;
-}
-
-}
-
 </style>
 </head>
 
@@ -106,106 +100,111 @@ button{
 <h1>📢 טלפון שבור</h1>
 
 <div class="instructions">
-
-המשתתף הראשון קורא את המשפט הסודי.<br>
-העבירו את המשפט בלחישה מאחד לשני לאורך כל השורה.<br>
-אסור לחזור על הלחישה פעמיים ואסור לבקש חזרה.<br>
-המשתתף האחרון אומר בקול את המשפט ששמע.<br><br>
-
-🏆 הקבוצה המהירה והמדויקת ביותר מנצחת!
-
+  לחצו על <b>הוצא משפט חדש</b>.<br>
+  המשתתף הראשון קורא את המשפט ומעביר אותו בלחישה לאורך השורה.<br>
+  המשתתף האחרון אומר בקול את המשפט ששמע.<br><br>
+  🏆 הקבוצה המהירה והמדויקת ביותר מנצחת!
 </div>
 
-<div class="sentence" id="sentenceBox"></div>
-
-<div class="timer" id="timer">
-00:00
+<div class="sentence" id="sentenceBox">
+  לחצו על "הוצא משפט חדש"
 </div>
 
-<button class="startBtn" onclick="startTimer()">
-▶ התחל
-</button>
+<div class="timer" id="timer">00:00</div>
 
-<button class="stopBtn" onclick="stopTimer()">
-⏹ עצור
-</button>
+<button class="newBtn" id="newBtn" onclick="newSentence()">🎲 הוצא משפט חדש</button>
+<button class="startBtn" id="startBtn" onclick="startTimer()" disabled>▶ התחל</button>
+<button class="stopBtn" id="stopBtn" onclick="stopTimer()" disabled>⏹ עצור</button>
 
 <div class="result" id="result"></div>
 
 <script>
-
 const sentences = [
-
-"הפיל אכל פיצה בתוך האוטובוס",
-"סבתא רקדה סלסה עם גמל",
-"התרנגולת קנתה גלידה בתחנת רכבת",
-"הדולפין שר שירים במקלחת ציבורית",
-"הכריש הזמין סלט בלי חסה",
-"הקוף מצא ארנק בתוך המקרר",
-"הכלב רכב אופניים בגשם שוטף",
-"האריה שיחק טניס עם פינגווין",
-"הרובוט שטף כלים עם שוקולד",
-"הברווז צבע קירות בצבע סגול",
-"הפיצה ברחה מהמסעדה בלילה",
-"הצב ניצח מירוץ נגד אופנוע",
-"התוכי אכל אבטיח על הירח",
-"הקרנף כתב שיר על מלפפון",
-"החתול בנה ארמון מקרטוני חלב",
-"הגמל למד שחייה בבריכה ביתית",
-"הפיל התחפש לעכבר במסיבה גדולה",
-"האסטרונאוט חיפש גרב בתוך תנור",
-"הטבח הכין פלאפל משוקולד לבן",
-"הדג ניגן בגיטרה על הסירה",
-"הפינגווין מכר גרעינים בתחנת דלק",
-"הסוס קפץ לבריכה עם מטרייה",
-"הינשוף אכל פופקורן באמצע שיעור",
-"העכבר שיחק כדורסל עם כריש",
-"הברווז קנה מחשב בלי מקלדת"
-
+  "הפיל אכל פיצה בתוך האוטובוס",
+  "סבתא רקדה סלסה עם גמל",
+  "התרנגולת קנתה גלידה בתחנת רכבת",
+  "הדולפין שר שירים במקלחת ציבורית",
+  "הכריש הזמין סלט בלי חסה",
+  "הקוף מצא ארנק בתוך המקרר",
+  "הכלב רכב אופניים בגשם שוטף",
+  "האריה שיחק טניס עם פינגווין",
+  "הרובוט שטף כלים עם שוקולד",
+  "הברווז צבע קירות בצבע סגול",
+  "הפיצה ברחה מהמסעדה בלילה",
+  "הצב ניצח מירוץ נגד אופנוע",
+  "התוכי אכל אבטיח על הירח",
+  "הקרנף כתב שיר על מלפפון",
+  "החתול בנה ארמון מקרטוני חלב",
+  "הגמל למד שחייה בבריכה ביתית",
+  "הפיל התחפש לעכבר במסיבה גדולה",
+  "האסטרונאוט חיפש גרב בתוך תנור",
+  "הטבח הכין פלאפל משוקולד לבן",
+  "הדג ניגן בגיטרה על הסירה",
+  "הפינגווין מכר גרעינים בתחנת דלק",
+  "הסוס קפץ לבריכה עם מטרייה",
+  "הינשוף אכל פופקורן באמצע שיעור",
+  "העכבר שיחק כדורסל עם כריש",
+  "הברווז קנה מחשב בלי מקלדת"
 ];
 
-const randomSentence =
-sentences[Math.floor(Math.random()*sentences.length)];
-
-document.getElementById("sentenceBox").innerHTML =
-randomSentence;
-
 let seconds = 0;
-let timer;
+let timer = null;
+let hasSentence = false;
+
+function newSentence(){
+  clearInterval(timer);
+  seconds = 0;
+  updateTimer();
+
+  const randomSentence = sentences[Math.floor(Math.random() * sentences.length)];
+  document.getElementById("sentenceBox").innerHTML = randomSentence;
+
+  document.getElementById("result").innerHTML = "";
+
+  hasSentence = true;
+
+  document.getElementById("startBtn").disabled = false;
+  document.getElementById("stopBtn").disabled = true;
+  document.getElementById("newBtn").disabled = true;
+}
 
 function startTimer(){
+  if(!hasSentence) return;
 
-clearInterval(timer);
+  clearInterval(timer);
+  seconds = 0;
+  updateTimer();
 
-seconds = 0;
+  document.getElementById("startBtn").disabled = true;
+  document.getElementById("stopBtn").disabled = false;
 
-document.getElementById("result").innerHTML = "";
-
-timer = setInterval(function(){
-
-seconds++;
-
-let minutes = Math.floor(seconds/60);
-let secs = seconds%60;
-
-document.getElementById("timer").innerHTML =
-String(minutes).padStart(2,"0") + ":" +
-String(secs).padStart(2,"0");
-
-},1000);
-
+  timer = setInterval(function(){
+    seconds++;
+    updateTimer();
+  },1000);
 }
 
 function stopTimer(){
+  clearInterval(timer);
 
-clearInterval(timer);
+  document.getElementById("result").innerHTML =
+    "⏱ זמן הקבוצה: " + document.getElementById("timer").innerHTML;
 
-document.getElementById("result").innerHTML =
-"⏱ זמן הקבוצה: " +
-document.getElementById("timer").innerHTML;
+  hasSentence = false;
 
+  document.getElementById("startBtn").disabled = true;
+  document.getElementById("stopBtn").disabled = true;
+  document.getElementById("newBtn").disabled = false;
 }
 
+function updateTimer(){
+  let minutes = Math.floor(seconds / 60);
+  let secs = seconds % 60;
+
+  document.getElementById("timer").innerHTML =
+    String(minutes).padStart(2,"0") + ":" +
+    String(secs).padStart(2,"0");
+}
 </script>
 
 </body>
